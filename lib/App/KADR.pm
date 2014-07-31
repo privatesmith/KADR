@@ -254,7 +254,7 @@ sub move_file {
 
 	if (-e $new) {
 		$sl->finalize('Would overwrite existing file: ' . $display_new);
-		return;
+		#return;
 	}
 
 	$sl->update('Moving to ' . $display_new);
