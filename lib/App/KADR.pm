@@ -543,7 +543,6 @@ sub _find_files {
 
 sub _valid_file {
 	return if substr($_->basename, -5) eq '.part';
-	return if substr($_->basename, 0, 1) eq '.';
 	return if $_->basename eq 'Thumbs.db';
 	return if $_->basename eq 'desktop.ini';
 	1;
