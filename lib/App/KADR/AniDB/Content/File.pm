@@ -35,6 +35,7 @@ refer anime_mylist => 'aid', client_method => 'mylist_anime';
 refer group        => 'gid';
 refer mylist       => [ 'lid', 'fid' ], client_method => 'mylist_file';
 
+
 sub crc_is_checked {
 	my $status = $_[0]->status;
 	!(($status & STATUS_CRCOK) || ($status & STATUS_CRCERR));
@@ -69,6 +70,13 @@ method episode_number_padded {
 	$self->episode_number->padded({ '' => length $epcount });
 }
 
+method episode_english_name_trimmed {
+	my $name = $self->episode_english_name;
+	$name =~ s/(.{0,50}).*/$1/;
+	$name =~ s/[\?]//;
+	$name
+}
+
 sub is_censored   { $_[0]->status & STATUS_CEN }
 sub is_uncensored { $_[0]->status & STATUS_UNC }
 
@@ -97,6 +105,8 @@ sub parse {
 	# XXX: Do this properly somewhere.
 	$file->{video_codec} =~ s/H264\/AVC/H.264/g;
 	$file->{audio_codec} =~ s/Vorbis \(Ogg Vorbis\)/Vorbis/g;
+	$file->{video_codec} =~ s/\//_/g;
+	$file->{episode_english_name} =~ s/\//_/g;
 
 	$file;
 }
