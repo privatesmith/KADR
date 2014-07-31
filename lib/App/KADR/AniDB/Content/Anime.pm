@@ -18,6 +18,8 @@ sub parse {
 	for my $field (qw(rating temp_rating review_rating)) {
 		$anime->{$field} = $anime->{$field} / 100.0 if $anime->{$field};
 	}
+	$anime->{english_name} =~ s/\//_/g;
+	$anime->{romaji_name} =~ s/\//_/g;
 	$anime;
 }
 
