@@ -39,6 +39,7 @@ has 'collator',                       default => 'auto',      isa => Collate;
 has 'database',                       default => $database,   isa => 'Str';
 has 'delete_empty_dirs_in_scanned',   default => 1,           isa => 'Str';
 has 'dirs_to_scan',                   isa => 'ExistingDirs',  required => 1;
+has 'watched',                        default => 0,           isa => 'Int';
 
 has 'expire_cache',
 	default => 1,

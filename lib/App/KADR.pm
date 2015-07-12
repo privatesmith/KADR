@@ -313,6 +313,17 @@ sub process_file {
 			$proc_sl->finalize_and_log('Error setting AniDB Mylist state to "On HDD"');
 		}
 	}
+	elsif (!$conf->test && $mylist->viewdate == 0 && $conf->watched) {
+		my $proc_sl = $sl->child('Freeform')->update('Setting AniDB Mylist viewed to "true"');
+		my $viewdate = time;
+		if($a->mylist_edit(lid => $file->lid, viewed => 1, viewdate => $viewdate)) {
+			$db->update('anidb_mylist_file', {viewdate => $viewdate}, {fid => $mylist->fid});
+			$proc_sl->finalize_and_log('Set AniDB Mylist viewed to "true"');
+		}
+		else {
+			$proc_sl->finalize_and_log('Error setting AniDB Mylist viewed to "true"');
+		}
+	}
 
 	# Mylist / mylist anime cache consistency check
 	# TODO: Move to the client somehow.
