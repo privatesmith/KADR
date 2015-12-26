@@ -62,23 +62,57 @@ dirs_to_scan:
 #
 # TODO: documentation of the available fields
 #
-# file_naming_scheme: |
-#   /home/me/anime/
-#   <: $file.episode_watched ? 'watched' : $anime_mylist.watched_eps ? 'watching' : 'unwatched' :>/
-#   : if not $file.is_primary_episode {
-#   <: $anime.romaji_name :>/
-#   : }
-#   <: $anime.romaji_name :>
-#   : if $file.is_primary_episode {
-#   :   if $file.version > 1 { print ' v' ~ $file.version }
-#   : }
-#   : else {
-#    - <: $file.episode_number_padded :>
-#   :   if $file.version > 1 { print 'v' ~ $file.version }
-#    - <: $file.episode_english_name :>
-#   : }
-#   : if $file.group_short_name != 'raw' { print ' [' ~ $file.group_short_name ~ ']' }
-#   .<: $file.file_type :>
+#file_naming_scheme: |
+#  /home/me/Anime/
+#  : if $anime.is_r18 {
+#  Hentai/
+#  : }
+#  : if $anime.type == 'Movie' {
+#  Movies/
+#  <: $anime.romaji_name :>/
+#  : }
+#  : else {
+#  Series/
+#  <: $anime.romaji_name :> 
+#  : given $file.dub_language {
+#  :   when "japanese'english" { 
+#  [Dual] 
+#  :   }
+#  :   when "english" { 
+#  [Dub] 
+#  :   }
+#  : }
+#  [<: $anime.episode_count :>]/
+#  : }
+#  : if $anime.english_name {
+#  <: $anime.english_name :>
+#  : } else {
+#  <: $anime.romaji_name :>
+#  : }
+#   - <: $file.episode_number_padded :>
+#  :   if $file.version > 1 { print 'v' ~ $file.version }
+#   - <: html_escape($file.episode_english_name_trimmed) :>
+#   
+#  : given $file.dub_language {
+#  :   when "japanese'english" { 
+#  [Dual]
+#  :   }
+#  :   when ["japanese", "japanese'japanese", "none"] { print '' }
+#  :   when "english" { 
+#  [Dub]
+#  :   }
+#  :   default {
+#  :     if ($file.dub_language != 'japanese' && $file.dub_language != "japanese'japanese" &&
+#  :         $file.dub_language != "japanese'japanese'japanese" && $file.dub_language != "none") {
+#  [<: $file.dub_language :>]
+#  :     }
+#  :   }
+#  : }
+#  : if $file.group_short_name != 'raw' { print '[' ~ $file.group_short_name ~ ']' }
+#  [<: $file.source :>]
+#  [<: $file.video_resolution :> <: $file.video_codec :>]
+#  [<: $file.crc32 :>]
+#  .<: $file.file_type :>
 
 # Timeout for AniDB queries.
 # query_timeout: 15.0
